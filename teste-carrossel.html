@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste do Carrossel - Valle MIL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 50px;
+            background: linear-gradient(135deg, #0A2463 0%, #1E3A8A 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero__carousel {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .carousel__container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: #fff;
+        }
+
+        .carousel__slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            pointer-events: none;
+        }
+
+        .carousel__slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .carousel__img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel__btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #0A2463;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .carousel__btn:hover {
+            background: #fff;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel__btn--prev {
+            left: 15px;
+        }
+
+        .carousel__btn--next {
+            right: 15px;
+        }
+
+        .carousel__indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .carousel__dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 2px solid #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .carousel__dot:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.2);
+        }
+
+        .carousel__dot.active {
+            background: #C9A961;
+            border-color: #C9A961;
+            transform: scale(1.3);
+        }
+
+        .debug-info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-family: monospace;
+        }
+
+        .debug-info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero__carousel">
+        <div class="carousel__container">
+            <!-- Slide 1 -->
+            <div class="carousel__slide active">
+                <img src="images/BannerValleMIL.png" alt="Banner Valle MIL" class="carousel__img">
+            </div>
+            
+            <!-- Slide 2 -->
+            <div class="carousel__slide">
+                <img src="images/hero-illustration.png" alt="Família" class="carousel__img">
+            </div>
+        </div>
+        
+        <!-- Setas -->
+        <button class="carousel__btn carousel__btn--prev" aria-label="Anterior">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="carousel__btn carousel__btn--next" aria-label="Próximo">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        <!-- Dots -->
+        <div class="carousel__indicators">
+            <button class="carousel__dot active" data-slide="0"></button>
+            <button class="carousel__dot" data-slide="1"></button>
+        </div>
+    </div>
+
+    <div class="debug-info">
+        <p><strong>DEBUG INFO:</strong></p>
+        <p id="current-slide">Slide atual: 1</p>
+        <p id="clicks">Cliques: 0</p>
+        <p id="autoplay">Autoplay: ativo</p>
+        <p id="images-loaded">Imagens carregadas: verificando...</p>
+    </div>
+
+    <script>
+        // Variáveis
+        const slides = document.querySelectorAll('.carousel__slide');
+        const prevBtn = document.querySelector('.carousel__btn--prev');
+        const nextBtn = document.querySelector('.carousel__btn--next');
+        const dots = document.querySelectorAll('.carousel__dot');
+        let currentSlide = 0;
+        let autoplayInterval;
+        let clickCount = 0;
+
+        // Debug
+        const debugCurrentSlide = document.getElementById('current-slide');
+        const debugClicks = document.getElementById('clicks');
+        const debugAutoplay = document.getElementById('autoplay');
+        const debugImages = document.getElementById('images-loaded');
+
+        // Verificar se imagens carregaram
+        const img1 = document.querySelectorAll('.carousel__img')[0];
+        const img2 = document.querySelectorAll('.carousel__img')[1];
+        
+        img1.addEventListener('load', () => {
+            console.log('✅ Imagem 1 carregada:', img1.src);
+        });
+        
+        img1.addEventListener('error', () => {
+            console.log('❌ Erro ao carregar imagem 1:', img1.src);
+            debugImages.textContent = '❌ Imagem 1 não encontrada';
+            debugImages.style.color = '#EF4444';
+        });
+        
+        img2.addEventListener('load', () => {
+            console.log('✅ Imagem 2 carregada:', img2.src);
+            debugImages.textContent = '✅ Imagens carregadas';
+            debugImages.style.color = '#10B981';
+        });
+        
+        img2.addEventListener('error', () => {
+            console.log('❌ Erro ao carregar imagem 2:', img2.src);
+            debugImages.textContent = '❌ Imagem 2 não encontrada';
+            debugImages.style.color = '#EF4444';
+        });
+
+        // Função para mostrar slide
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+
+            if (index >= slides.length) {
+                currentSlide = 0;
+            } else if (index < 0) {
+                currentSlide = slides.length - 1;
+            } else {
+                currentSlide = index;
+            }
+
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+
+            // Debug
+            debugCurrentSlide.textContent = `Slide atual: ${currentSlide + 1}`;
+            console.log('Mostrando slide:', currentSlide + 1);
+        }
+
+        // Próximo slide
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        // Slide anterior
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        // Autoplay
+        function startAutoplay() {
+            autoplayInterval = setInterval(() => {
+                nextSlide();
+                console.log('Autoplay: próximo slide');
+            }, 3000); // 3 segundos para teste
+            debugAutoplay.textContent = 'Autoplay: ✅ ativo';
+        }
+
+        function stopAutoplay() {
+            if (autoplayInterval) {
+                clearInterval(autoplayInterval);
+                debugAutoplay.textContent = 'Autoplay: ⏸️ pausado';
+            }
+        }
+
+        // Event listeners
+        prevBtn.addEventListener('click', () => {
+            clickCount++;
+            debugClicks.textContent = `Cliques: ${clickCount}`;
+            console.log('Botão anterior clicado');
+            prevSlide();
+            stopAutoplay();
+            startAutoplay();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            clickCount++;
+            debugClicks.textContent = `Cliques: ${clickCount}`;
+            console.log('Botão próximo clicado');
+            nextSlide();
+            stopAutoplay();
+            startAutoplay();
+        });
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                clickCount++;
+                debugClicks.textContent = `Cliques: ${clickCount}`;
+                console.log('Dot clicado:', index + 1);
+                showSlide(index);
+                stopAutoplay();
+                startAutoplay();
+            });
+        });
+
+        // Teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                prevSlide();
+                stopAutoplay();
+                startAutoplay();
+            } else if (e.key === 'ArrowRight') {
+                nextSlide();
+                stopAutoplay();
+                startAutoplay();
+            }
+        });
+
+        // Inicializar
+        console.log('🚀 Carrossel inicializado!');
+        console.log('Total de slides:', slides.length);
+        console.log('Slide inicial:', currentSlide + 1);
+        startAutoplay();
+    </script>
+
+</body>
+</html>

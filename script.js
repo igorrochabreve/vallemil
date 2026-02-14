@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         headerScrollThreshold: 50,
         scrollOffset: 80,
         animationDelay: 100,
-        whatsappNumber: '5511987654321',
+        whatsappNumber: '5512991090909',
         whatsappMessage: 'Olá, gostaria de solicitar uma cotação na Valle MIL.',
         formSubmitDelay: 1500
     };
@@ -1211,6 +1211,7 @@ document.addEventListener('DOMContentLoaded', () => {
             WhatsAppButton.init();
             MicroInteractions.init();
             ScrollToTop.init();
+            HeroCarousel.init();
 
             // Log de inicialização (remover em produção)
             console.log('%c Valle MIL - Site inicializado com sucesso! ', 'background: #0A2463; color: #C9A961; padding: 10px; font-weight: bold;');
