@@ -12,12 +12,12 @@
    ======================================== */
 :root {
     /* Cores Principais */
-    --color-primary: #0A2463;           /* Azul Marinho Profundo */
-    --color-primary-light: #1E3A8A;     /* Azul Médio */
-    --color-primary-dark: #051533;      /* Azul Muito Escuro */
-    --color-secondary: #C9A961;         /* Dourado Suave */
-    --color-secondary-light: #E5D4A3;   /* Dourado Claro */
-    --color-secondary-dark: #A08642;    /* Dourado Escuro */
+    --color-primary: #041845;           /* Azul Marinho Profundo */
+    --color-primary-light: #0d2463;     /* Azul Médio */
+    --color-primary-dark: #021029;      /* Azul Muito Escuro */
+    --color-secondary: #bda264;         /* Dourado Suave */
+    --color-secondary-light: #e7d08e;   /* Dourado Claro */
+    --color-secondary-dark: #7c6d46;    /* Dourado Escuro */
     
     /* Cores Neutras */
     --color-white: #FFFFFF;
@@ -29,8 +29,8 @@
     --color-gray-500: #6B7280;
     --color-gray-600: #4B5563;
     --color-gray-700: #374151;
-    --color-gray-800: #1F2937;
-    --color-gray-900: #111827;
+    --color-gray-800: #1d2735;
+    --color-gray-900: #0d1320;
     
     /* Cores de Status */
     --color-success: #10B981;
