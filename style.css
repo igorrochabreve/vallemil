@@ -348,11 +348,25 @@ section {
 
 /* Logo */
 .header__logo .logo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
     font-family: var(--font-primary);
     font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-bold);
     color: var(--color-primary);
-    transition: color var(--transition-base);
+    transition: all var(--transition-base);
+}
+
+.logo__icon {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    transition: transform var(--transition-base);
+}
+
+.header__logo .logo:hover .logo__icon {
+    transform: scale(1.05);
 }
 
 .logo__text {
@@ -1448,12 +1462,21 @@ section {
         padding: var(--spacing-3xl) 0;
     }
     
-    /* Header Mobile */
-    .header__container {
-        height: 70px;
-    }
-    
-    .nav {
+/* Header Mobile */
+.header__container {
+    height: 70px;
+}
+
+.logo__icon {
+    width: 35px;
+    height: 35px;
+}
+
+.logo__text {
+    font-size: var(--font-size-xl);
+}
+
+.nav {
         position: fixed;
         top: 70px;
         left: -100%;
